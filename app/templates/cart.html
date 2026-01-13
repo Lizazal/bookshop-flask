@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Корзина{% endblock %}
+{% block content %}
+<div class="card">
+	<h1 class="mt-0">Корзина</h1>
+	{% if items %}
+		{% for item in items %}
+			<div class="row flex-align">
+				<div style="width: 90px;">
+					{% if item.book.cover %}
+						<img src="{{ item.book.cover }}" alt="{{ item.book.title }}" class="cart-cover">
+					{% else %}
+						<div class="cart-else-cover"></div>
+					{% endif %}
+				</div>
+				<div class="flex-1">
+					<div>
+						<strong>{{ item.book.title }}</strong>
+						<span class="muted">- {{ item.book.author }}</span>
+					</div>
+					<div>Цена: {{ item.book.price }}</div>
+					<div class="row gap-8 mt-10">
+						<form method="post" action="{{ url_for('main.cart_update', item_id=item.id) }}" class="row gap-8">
+							<input type="number" name="quantity" min="1" value="{{ item.quantity }}" style="width: 120px;">
+							<button class="btn secondary" type="submit">Обновить</button>
+						</form>
+						<form method="post" action="{{ url_for('main.cart_remove', item_id=item.id) }}">
+							<button class="btn danger" type="submit">Удалить</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="divider"></div>
+		{% endfor %}
+		<p><strong>Итого: {{ total }}</strong></p>
+		<a class="btn" href="{{ url_for('main.checkout') }}">Оформить заказ</a>
+	{% else %}
+		<p class="muted">Корзина пуста.</p>
+		<a class="btn secondary" href="{{ url_for('main.catalog') }}">Перейти в каталог</a>
+	{% endif %}
+</div>
+{% endblock %}

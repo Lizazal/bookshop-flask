@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}История заказов{% endblock %}
+{% block content %}
+<div class="card">
+	<h1 class="mt-0">История заказов</h1>
+	{% if orders %}
+		{% for order in orders %}
+			<div class="card" style="margin: 0 0 12px 0;">
+				<div class="row">
+					<strong>Заказ #{{ order.id }}</strong>
+					<span class="right round-text">{{ order.status }}</span>
+				</div>
+				<div class="small muted">Дата: {{ order.created_at }}</div>
+				{% if order.delivery_method == "courier" and order.address %}
+					<div class="small muted">Доставка: до двери - {{ order.address }}</div>
+				{% else %}
+					<div class="small muted">Доставка: самовывоз</div>
+				{% endif %}
+				<div class="divider"></div>
+				<ul>
+					{% for item in order.items %}
+						<li>
+							{{ item.book.title }} - {{ item.quantity }} шт. - {{ item.price }}
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endfor %}
+	{% else %}
+		<p class="muted">Заказов пока нет.</p>
+		<a class="btn secondary" href="{{ url_for('main.catalog') }}">Перейти в каталог</a>
+	{% endif %}
+</div>
+{% endblock %}

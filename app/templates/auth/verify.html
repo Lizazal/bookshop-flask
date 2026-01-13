@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Подтверждение{% endblock %}
+{% block content %}
+<div class="card" style="max-width: 520px;">
+	<h1 class="mt-0">Подтверждение</h1>
+	<p class="muted">
+		Введите код подтверждения. (Код показывается в сообщении после регистрации.)
+	</p>
+	<form method="post">
+		<label class="small muted">Код</label>
+		<input name="code" required>
+		<div style="height: 10px;"></div>
+		<button class="btn" type="submit">Подтвердить</button>
+	</form>
+	<div class="divider"></div>
+	<a class="btn secondary" href="{{ url_for('auth.register') }}">Назад к регистрации</a>
+</div>
+{% endblock %}

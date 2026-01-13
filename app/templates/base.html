@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %}Книжный магазин{% endblock %}</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<header>
+	<div class="container row">
+		<a href="{{ url_for('main.index') }}"><strong>Книжный</strong></a>
+		<a href="{{ url_for('main.catalog') }}">Каталог</a>
+		<a href="{{ url_for('main.cart') }}">Корзина</a>
+		<div class="right">
+			{% if current_user.is_authenticated %}
+				<span class="muted">Привет, {{ current_user.name }}!</span>
+				<a href="{{ url_for('main.orders') }}">Заказы</a>
+				<a href="{{ url_for('auth.logout_confirm') }}">Выйти</a>
+			{% else %}
+				<a href="{{ url_for('auth.login') }}">Войти</a>
+				<a href="{{ url_for('auth.register') }}">Регистрация</a>
+			{% endif %}
+		</div>
+	</div>
+</header>
+<div class="container">
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for m in messages %}
+				<div class="flash">{{ m }}</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+	{% block content %}{% endblock %}
+</div>
+</body>
+</html>

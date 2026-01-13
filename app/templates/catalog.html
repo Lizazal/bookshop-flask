@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Каталог{% endblock %}
+{% block content %}
+<div class="card">
+	<h1 class="mt-0">Каталог</h1>
+	<form method="get" class="row gap-8">
+		<input name="q" placeholder="Поиск по названию или автору" value="{{ q }}">
+		{% if selected_genre_id %}
+			<input type="hidden" name="genre" value="{{ selected_genre_id }}">
+		{% endif %}
+		<button class="btn" type="submit">Найти</button>
+		<a class="btn secondary" href="{{ url_for('main.catalog') }}">Сбросить</a>
+	</form>
+	<div class="divider"></div>
+	<h2>Жанры</h2>
+	<div class="row">
+		<a class="round-text" href="{{ url_for('main.catalog') }}">Все</a>
+		{% for genre in genres %}
+			<a class="round-text" href="{{ url_for('main.catalog', genre=genre.id, q=q if q else None) }}">{{ genre.name }}</a>
+		{% else %}
+			<span class="muted">Жанров пока нет.</span>
+		{% endfor %}
+	</div>
+	{% if selected_genre_id %}
+		<p class="muted small mb-0">Показаны книги выбранного жанра.</p>
+	{% endif %}
+</div>
+<div class="card">
+	<h2 class="mt-0">Книги</h2>
+	{% if books %}
+		<div class="grid">
+			{% for book in books %}
+				<div class="card book-card m-0">
+					{% if book.cover %}
+						<img src="{{ book.cover }}" alt="{{ book.title }}">
+					{% else %}
+						<div class="else-cover"></div>
+					{% endif %}
+					<div class="mt-10">
+						<strong>{{ book.title }}</strong><br>
+						<span class="muted">{{ book.author }}</span><br>
+						<span class="small">⭐ {{ book.rating }} ({{ book.rating_count }})</span><br>
+						<span class="small">{{ book.price }}</span>
+					</div>
+					<div class="divider"></div>
+					<a class="btn" href="{{ url_for('main.book_detail', book_id=book.id) }}">Подробнее</a>
+				</div>
+			{% endfor %}
+		</div>
+	{% else %}
+		<p class="muted">Книг не найдено.</p>
+	{% endif %}
+</div>
+{% endblock %}

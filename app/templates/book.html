@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }}{% endblock %}
+{% block content %}
+<div class="card">
+	<div class="row flex-align">
+		<div style="width: 260px;">
+			{% if book.cover %}
+				<img src="{{ book.cover }}" alt="{{ book.title }}" class="book-cover-style">
+			{% else %}
+				<div class="book-cover-else-style"></div>
+			{% endif %}
+		</div>
+		<div class="flex-1">
+			<h1 class="mt-0">{{ book.title }}</h1>
+			<p class="muted">Автор: {{ book.author }}</p>
+			<p>Год: {{ book.year or "—" }}</p>
+			<p>Цена: <strong>{{ book.price }}</strong></p>
+			<p>⭐ {{ book.rating }} ({{ book.rating_count }})</p>
+			{% if book.description %}
+				<p>{{ book.description }}</p>
+			{% endif %}
+			<div class="divider"></div>
+			<form method="post" action="{{ url_for('main.cart_add', book_id=book.id) }}">
+				<button class="btn" type="submit">Добавить в корзину</button>
+			</form>
+			{% if not current_user.is_authenticated %}
+				<p class="muted small">
+					Чтобы оставить отзыв <a href="{{ url_for('auth.login') }}">войдите</a>.
+				</p>
+			{% endif %}
+		</div>
+	</div>
+</div>
+<div class="card">
+	<h2 class="mt-0">Отзывы</h2>
+	{% if reviews %}
+		{% for r in reviews %}
+			<div class="mb-10">
+				<div>
+					<strong>{{ r.rating }}/5</strong>
+					<span class="muted small"> {{ r.created_at }}</span>
+				</div>
+				<div>{{ r.text or "" }}</div>
+			</div>
+			<div class="divider"></div>
+		{% endfor %}
+	{% else %}
+		<p class="muted">Отзывов пока нет.</p>
+	{% endif %}
+	{% if current_user.is_authenticated %}
+		<h3>Оставить отзыв</h3>
+		<form method="post" action="{{ url_for('main.review_add_or_update', book_id=book.id) }}">
+			<label class="small muted">Оценка (1–5)</label>
+			<input type="number" name="rating" min="1" max="5" required>
+			<div style="height: 8px;"></div>
+			<label class="small muted">Текст</label>
+			<textarea name="text" placeholder="Ваш отзыв"></textarea>
+			<div style="height: 10px;"></div>
+			<button class="btn" type="submit">Сохранить отзыв</button>
+		</form>
+	{% endif %}
+</div>
+{% endblock %}
