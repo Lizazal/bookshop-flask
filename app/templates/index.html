@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<div class="card">
+	<h1 class="mt-0">Главная</h1>
+	<form method="get" class="row gap-8">
+		<input name="q" placeholder="Поиск по названию или автору" value="{{ q }}">
+		<button class="btn" type="submit">Найти</button>
+		<a class="btn secondary" href="{{ url_for('main.catalog') }}">Каталог</a>
+	</form>
+	<div class="divider"></div>
+	<h2>Жанры</h2>
+	<div class="row">
+		{% for genre in genres %}
+			<a class="round-text" href="{{ url_for('main.catalog', genre=genre.id) }}">{{ genre.name }}</a>
+		{% else %}
+			<span class="muted">Жанров пока нет.</span>
+		{% endfor %}
+	</div>
+</div>
+<div class="card">
+	<h2 class="mt-0">ТОП-3 книги</h2>
+	<div class="grid">
+		{% for book in top_books %}
+			<div class="card book-card m-0">
+				{% if book.cover %}
+					<img src="{{ book.cover }}" alt="{{ book.title }}">
+				{% else %}
+					<div class="else-cover"></div>
+				{% endif %}
+				<div class="mt-10">
+					<strong>{{ book.title }}</strong><br>
+					<span class="muted">{{ book.author }}</span><br>
+					<span class="small">⭐ {{ book.rating }} ({{ book.rating_count }})</span>
+				</div>
+				<div class="divider"></div>
+				<a class="btn" href="{{ url_for('main.book_detail', book_id=book.id) }}">Подробнее</a>
+			</div>
+		{% endfor %}
+	</div>
+</div>
+{% if q %}
+	<div class="card">
+		<h2 class="mt-0">Результаты поиска: «{{ q }}»</h2>
+		{% if search_books %}
+			<ul>
+				{% for book in search_books %}
+					<li>
+						<a href="{{ url_for('main.book_detail', book_id=book.id) }}">{{ book.title }} — {{ book.author }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+		{% else %}
+			<p class="muted">Ничего не найдено.</p>
+		{% endif %}
+	</div>
+{% endif %}
+{% endblock %}

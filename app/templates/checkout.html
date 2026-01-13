@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Оформление заказа{% endblock %}
+{% block content %}
+<div class="card">
+	<h1 class="mt-0">Оформление заказа</h1>
+	<p class="muted">Проверьте товары и выберите способ доставки.</p>
+	<ul>
+		{% for item in items %}
+			<li>
+				{{ item.book.title }} - {{ item.quantity }} шт. - {{ item.book.price }}
+			</li>
+		{% endfor %}
+	</ul>
+	<p><strong>Итого: {{ total }}</strong></p>
+	<div class="divider"></div>
+	<form method="post">
+		<p><strong>Способ доставки</strong></p>
+		<label>
+			<input type="radio" name="delivery_method" value="pickup" checked>
+			Самовывоз
+		</label>
+		<br>
+		<label>
+			<input type="radio" name="delivery_method" value="courier">
+			До двери
+		</label>
+		<div style="height: 10px;"></div>
+		<label class="small muted">Адрес</label>
+		<input name="address" placeholder="Улица, дом, квартира">
+		<div style="height: 10px;"></div>
+		<button class="btn" type="submit">Подтвердить и отправить заказ</button>
+	</form>
+	<div class="divider"></div>
+	<a class="btn secondary" href="{{ url_for('main.cart') }}">Вернуться в корзину</a>
+</div>
+{% endblock %}
